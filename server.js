@@ -1,7 +1,11 @@
 const express = require('express'); //loads the express library - Hey node, give me the express tool!
 const app = express(); //calls the express function, becmoes the main object.  
 const path = require('path'); // path gives tools to work with file and folders
+const {logger} = require('./middleware/logger');
+const errorHandler = require('./middleware/errorHandler')
 const PORT = process.env.PORT || 3500;
+
+app.use(logger);
 app.use(express.json()); // let the app to rvc and parse json data
 app.use('/',express.static(path.join(__dirname,'public'))); // when someone visit the app ('/), this line provides all the files that are in the public folder, express.sttaic() is a built-in express function to serve static files.
 
@@ -20,6 +24,7 @@ app.all(/.*/,(req,res)=>{
     }
 })
 
+app.use(errorHandler);
 
 app.listen(PORT, ()=>{
     console.log(`Server started on port ${PORT} `)
