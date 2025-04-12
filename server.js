@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express'); //loads the express library - Hey node, give me the express tool!
 const app = express(); //calls the express function, becmoes the main object.  
 const path = require('path'); // path gives tools to work with file and folders
@@ -8,13 +9,14 @@ const cors = require('cors');
 const corsOptions = require('./config/corsOption')
 const PORT = process.env.PORT || 3500;
 
+console.log(process.env.NODE_ENV);
 app.use(logger);
 
 app.use(cors(corsOptions));
 
 app.use(express.json()); // let the app to rvc and parse json data
 
-app.use(cookieParser);
+app.use(cookieParser());
 
 app.use('/',express.static(path.join(__dirname,'public'))); // when someone visit the app ('/), this line provides all the files that are in the public folder, express.sttaic() is a built-in express function to serve static files.
 
