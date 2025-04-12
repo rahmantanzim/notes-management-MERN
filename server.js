@@ -3,10 +3,19 @@ const app = express(); //calls the express function, becmoes the main object.
 const path = require('path'); // path gives tools to work with file and folders
 const {logger} = require('./middleware/logger');
 const errorHandler = require('./middleware/errorHandler')
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
+const corsOptions = require('./config/corsOption')
 const PORT = process.env.PORT || 3500;
 
 app.use(logger);
+
+app.use(cors(corsOptions));
+
 app.use(express.json()); // let the app to rvc and parse json data
+
+app.use(cookieParser);
+
 app.use('/',express.static(path.join(__dirname,'public'))); // when someone visit the app ('/), this line provides all the files that are in the public folder, express.sttaic() is a built-in express function to serve static files.
 
 app.use('/',require('./routes/root')); //"Hey, Express, for anything under /, go ask the routes/root.js file how to handle it."
