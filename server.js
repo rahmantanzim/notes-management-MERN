@@ -2,15 +2,18 @@ require('dotenv').config(); //let us use env variable.
 const express = require('express'); //loads the express library - Hey node, give me the express tool!
 const app = express(); //calls the express function, becmoes the main object.  
 const path = require('path'); // path gives tools to work with file and folders
-const {logger} = require('./middleware/logger');
+const {logger,logEvents} = require('./middleware/logger');
 const errorHandler = require('./middleware/errorHandler')
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const connectDB = require('./config/dbCon');
+const mongoose = require('mongoose');
 const corsOptions = require('./config/corsOption')
 const PORT = process.env.PORT || 3500;
 
 console.log(process.env.NODE_ENV);
-app.use(logger);
+
+connectDB();
 
 app.use(cors(corsOptions));
 
@@ -37,6 +40,15 @@ app.all(/.*/,(req,res)=>{
 
 app.use(errorHandler);
 
-app.listen(PORT, ()=>{
-    console.log(`Server started on port ${PORT} `)
+
+mongoose.connection.once('open', ()=>{
+    console.log('Connected to mongoDB')
+    app.listen(PORT, ()=>{
+        console.log(`Server started on port ${PORT} `)
+    })
+})
+
+mongoose.connection.on('error',(err)=>{
+    console.log(err)
+    logEvents(`${err.no}\t${err.code}$\${err.syscall}\t${err.hostname}`,'mongoErrLog.log');
 })
