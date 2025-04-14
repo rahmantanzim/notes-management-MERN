@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config(); //let us use env variable.
 const express = require('express'); //loads the express library - Hey node, give me the express tool!
 const app = express(); //calls the express function, becmoes the main object.  
 const path = require('path'); // path gives tools to work with file and folders
