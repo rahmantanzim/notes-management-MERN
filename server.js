@@ -18,7 +18,7 @@ connectDB();
 
 app.use(cors(corsOptions));
 
-app.use(express.json()); // let the app to rvc and parse json data
+app.use(express.json()); // let the app to rcv and parse json data
 
 app.use(cookieParser());
 
