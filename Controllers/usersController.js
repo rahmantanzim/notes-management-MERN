@@ -76,9 +76,25 @@ const createUser = asyncHandler(
     );
 // Delete - delete a user
 const deleteUser = asyncHandler(
-    (req,res)=>{
+    async (req,res)=>{
+        const {id} = req.body;
+        if(!id){
+            return res.status(400).json({message: 'ID is required'});
+        }
+        const notes = await Note.findById({user:id}.lean());
+        if(notes.length){
+            return res.status(400).json({message:'This user has assigned notes'});
+        }
+        const user = await User.findById({id}.exec());
+        if(!user){
+            return res.status(400).json({message:'invalid user'});
+        }
+        const result = await user.deleteOne();
 
+        const reply = `Username ${result.username} is deleted`;
+
+        res.json(reply);
+        
     }
 );
-
 module.exports = {getAllUser,createUser,updateUser,deleteUser}
