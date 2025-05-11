@@ -1,9 +1,9 @@
 const User = require('./../models/User');
 const Note = require('./../models/Note');
 const asyncHandler = require('express-async-handler');
-
+const bcrypt = require('bcryptjs');
 // Get - Get all users
-const getAllUser = asyncHandler(
+const getAllUsers = asyncHandler(
     async (req,res)=>{
         const users = await User.find().select('-password').lean();// lean = returns plain JS object without the mongoose documnets that includes heavier methods like save()
         if(!users?.length){
@@ -15,14 +15,14 @@ const getAllUser = asyncHandler(
 // Post - Create a new user
 const createUser = asyncHandler(
     async (req,res)=>{
-        const {username,passwrod,roles} = req.body;
+        const {username,password,roles} = req.body;
         //data validation
         if(!username || !password || !Array.isArray(roles)){
             return res.status(400).json({message: 'All fields are required'});
         }
         //check for duplicates
-        const duplicate = await User.findOne({username}.lean().exec()); // {username} is shorthand for {username : username}
-        if(duplicate) {
+        const duplicate = await User.findOne({username}).lean().exec(); // {username} is shorthand for {username : username}
+        if(duplicate) {deleteUser
             return res.status(409).json({message:'Duplicate username found.'})
         }
         //hash the password
@@ -81,20 +81,20 @@ const deleteUser = asyncHandler(
         if(!id){
             return res.status(400).json({message: 'ID is required'});
         }
-        const notes = await Note.findById({user:id}.lean());
+        const notes = await Note.findById({user:id}).lean();
         if(notes.length){
             return res.status(400).json({message:'This user has assigned notes'});
         }
-        const user = await User.findById({id}.exec());
+        const user = await User.findById({id}).exec();
         if(!user){
             return res.status(400).json({message:'invalid user'});
         }
         const result = await user.deleteOne();
 
-        const reply = `Username ${result.username} is deleted`;
+        const reply = `User ${result.username} is deleted`;
 
         res.json(reply);
         
     }
 );
-module.exports = {getAllUser,createUser,updateUser,deleteUser}
+module.exports = {getAllUsers,createUser,updateUser,deleteUser}

@@ -26,6 +26,7 @@ app.use('/',express.static(path.join(__dirname,'public'))); // when someone visi
 
 app.use('/',require('./routes/root')); //"Hey, Express, for anything under /, go ask the routes/root.js file how to handle it."
 app.use('/users', require('./routes/userRoutes'))
+app.use('/notes',require('routes/NoteRoutes'));
 
 app.all(/.*/,(req,res)=>{
     res.status(404) //sets the http status code as 404 which means the file they are looking for does not exist
