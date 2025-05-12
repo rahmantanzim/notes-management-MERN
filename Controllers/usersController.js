@@ -22,7 +22,7 @@ const createUser = asyncHandler(
         }
         //check for duplicates
         const duplicate = await User.findOne({username}).lean().exec(); // {username} is shorthand for {username : username}
-        if(duplicate) {deleteUser
+        if(duplicate) {
             return res.status(409).json({message:'Duplicate username found.'})
         }
         //hash the password
